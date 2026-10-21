@@ -1,285 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Md. Niloy Parves | Portfolio</title>
-    <style>
-        /* CSS Reset & General Settings */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EduManage – Student Information &amp; Analytics System</title>
+  <meta name="description" content="EduManage is a Python terminal application for managing students and analysing results, built with OOP, JSON storage and layered error handling.">
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --ink: #18202b;
+      --muted: #5d6b7c;
+      --line: #e3e8ef;
+      --brand: #2457d6;
+      --brand-soft: #e8eefc;
+      --code-bg: #0f1722;
+      --code-ink: #d7e2f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0e141c;
+        --surface: #151d28;
+        --ink: #e8eef6;
+        --muted: #98a6b8;
+        --line: #243041;
+        --brand: #7aa2ff;
+        --brand-soft: #1a2640;
+        --code-bg: #0a0f16;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    a { color: var(--brand); text-decoration: none; }
+    .wrap { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
 
-        body {
-            background-color: #f8f9fa;
-            color: #333;
-            line-height: 1.6;
-        }
+    header.top { position: sticky; top: 0; z-index: 10; background: var(--surface); border-bottom: 1px solid var(--line); }
+    header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 12px; padding-bottom: 12px; flex-wrap: wrap; }
+    .logo { font-weight: 700; font-size: 1.15rem; color: var(--ink); }
+    .logo span { color: var(--brand); }
+    nav { display: flex; gap: 18px; flex-wrap: wrap; }
+    nav a { color: var(--muted); font-size: .95rem; }
+    nav a:hover { color: var(--brand); }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+    .hero { padding: 72px 0 56px; }
+    .tag { display: inline-block; background: var(--brand-soft); color: var(--brand); padding: 4px 12px; border-radius: 999px; font-size: .85rem; font-weight: 600; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.15; margin: 16px 0 12px; letter-spacing: -0.02em; }
+    .hero p.lead { max-width: 640px; color: var(--muted); font-size: 1.1rem; margin: 0 0 24px; }
+    .btn { display: inline-block; padding: 10px 18px; border-radius: 8px; font-weight: 600; border: 1px solid var(--brand); }
+    .btn.primary { background: var(--brand); color: #fff; }
+    .btn.ghost { color: var(--brand); margin-left: 8px; }
+    .stack { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { border: 1px solid var(--line); background: var(--surface); padding: 4px 12px; border-radius: 999px; font-size: .85rem; color: var(--muted); }
 
-        /* Navigation Bar */
-        header {
-            background: #1e293b;
-            color: #fff;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+    section { padding: 48px 0; border-top: 1px solid var(--line); }
+    h2 { font-size: 1.6rem; margin: 0 0 8px; letter-spacing: -0.01em; }
+    .sub { color: var(--muted); margin: 0 0 28px; max-width: 620px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+    .card h3 { margin: 0 0 8px; font-size: 1.05rem; }
+    .card p { margin: 0; color: var(--muted); font-size: .95rem; }
+    .icon { width: 36px; height: 36px; border-radius: 8px; background: var(--brand-soft); color: var(--brand); display: grid; place-items: center; font-weight: 700; margin-bottom: 12px; }
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-        }
+    ul.features { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px 24px; }
+    ul.features li { padding-left: 24px; position: relative; }
+    ul.features li::before { content: "✓"; position: absolute; left: 0; color: var(--brand); font-weight: 700; }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #38bdf8;
-        }
+    pre { background: var(--code-bg); color: var(--code-ink); padding: 18px; border-radius: 12px; overflow-x: auto; font-size: .9rem; line-height: 1.5; margin: 0; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
 
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 1.5rem;
-        }
+    table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: .95rem; }
+    th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+    th { background: var(--brand-soft); color: var(--brand); }
+    tr:last-child td { border-bottom: 0; }
 
-        .nav-links a:hover {
-            color: #38bdf8;
-            transition: 0.3s;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color: #fff;
-            padding: 80px 20px;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        .hero h1 span {
-            color: #38bdf8;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: #cbd5e1;
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            display: inline-block;
-            background: #38bdf8;
-            color: #0f172a;
-            padding: 10px 25px;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .btn:hover {
-            background: #7dd3fc;
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 30px;
-            color: #0f172a;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 50px;
-            height: 3px;
-            background: #38bdf8;
-            margin: 8px auto 0;
-            border-radius: 2px;
-        }
-
-        /* Cards Grid Layout (Responsive) */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .card {
-            background: #fff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card h3 {
-            margin-bottom: 10px;
-            color: #1e293b;
-        }
-
-        /* Skills Section */
-        .skills-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .skill-tag {
-            background: #e2e8f0;
-            color: #334155;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        /* Contact Section */
-        .contact {
-            text-align: center;
-            background: #fff;
-            padding: 40px 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        /* Footer */
-        footer {
-            background: #0f172a;
-            color: #94a3b8;
-            text-align: center;
-            padding: 20px;
-            margin-top: 50px;
-        }
-
-        /* Responsive Design Rules */
-        @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
-        }
-    </style>
+    footer { border-top: 1px solid var(--line); padding: 28px 0; color: var(--muted); font-size: .9rem; text-align: center; }
+  </style>
 </head>
 <body>
 
-    <!-- Header Navigation -->
-    <header>
-        <nav>
-            <div class="logo">Niloy.dev</div>
-            <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#top">Edu<span>Manage</span></a>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#highlights">Highlights</a>
+      <a href="#features">Features</a>
+      <a href="#demo">Demo</a>
+      <a href="#run">Run it</a>
+    </nav>
+  </div>
+</header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1>Hi, I'm <span>Md. Niloy Parves</span></h1>
-        <p>Python Enthusiast & Web Developer</p>
-        <a href="#contact" class="btn">Get In Touch</a>
-    </section>
+<main id="top">
+  <div class="wrap hero">
+    <span class="tag">Python · OOP · JSON</span>
+    <h1>Student Information &amp; Analytics System</h1>
+    <p class="lead">EduManage is a terminal application that manages students and teachers, stores everything in a lightweight JSON database, and turns grades into clear analytics.</p>
+    <a class="btn primary" href="#run">Get started</a>
+    <a class="btn ghost" href="#features">See features</a>
+    <div class="stack">
+      <span class="chip">Python 3.9+</span>
+      <span class="chip">Object-Oriented Design</span>
+      <span class="chip">JSON persistence</span>
+      <span class="chip">Custom exceptions</span>
+      <span class="chip">unittest</span>
+    </div>
+  </div>
 
-    <!-- About Section -->
-    <div class="container" id="about">
-        <h2 class="section-title">About Me</h2>
+  <section id="about">
+    <div class="wrap">
+      <h2>About the project</h2>
+      <p class="sub">A scalable command-line system built with the Python standard library only: no frameworks, no external database.</p>
+    </div>
+  </section>
+
+  <section id="highlights">
+    <div class="wrap">
+      <h2>Technical highlights</h2>
+      <p class="sub">Three engineering ideas hold the project together.</p>
+      <div class="grid">
         <div class="card">
-            <p>
-                I am <strong>Md. Niloy Parves</strong>. Driven by a deep passion for technology and programming, I specialize in Web Development and Python. My goal is to build simple, clean, and efficient web applications that solve real-world problems.
-            </p>
+          <div class="icon">1</div>
+          <h3>Core object logic</h3>
+          <p>An abstract <code>Person</code> class with <code>Student</code>, <code>GraduateStudent</code> and <code>Teacher</code> subclasses. Inheritance, encapsulated validation and polymorphic methods keep the code scalable.</p>
         </div>
-    </div>
-
-    <!-- Skills Section -->
-    <div class="container" id="skills">
-        <h2 class="section-title">My Skills</h2>
         <div class="card">
-            <h3>Technical Expertise</h3>
-            <div class="skills-list">
-                <span class="skill-tag">Python and Django</span>
-                <span class="skill-tag">Web Scraping (BeautifulSoup / Requests)</span>
-                <span class="skill-tag">HTML5</span>
-                <span class="skill-tag">CSS3 (Flexbox & Grid)</span>
-                <span class="skill-tag">Responsive Web Design</span>
-                <span class="skill-tag">Git & GitHub</span>
-            </div>
+          <div class="icon">2</div>
+          <h3>Data persistence</h3>
+          <p>Clean JSON files act as a lightweight local database, with atomic writes, auto-generated IDs and protection against corrupted files.</p>
         </div>
-    </div>
-
-    <!-- Projects Section -->
-    <div class="container" id="projects">
-        <h2 class="section-title">Projects</h2>
-        <div class="grid">
-            <div class="card">
-                <h3>Web Scraping Tool</h3>
-                <p>An automated web scraper built using Python and BeautifulSoup to extract and process data efficiently from target websites.</p>
-            </div>
-            <div class="card">
-                <h3>Portfolio Website</h3>
-                <p>A responsive personal portfolio page built with HTML5, CSS3 Flexbox, and Media Queries to showcase projects and skills.</p>
-            </div>
-            <div class="card">
-                <h3>Python Automation Script</h3>
-                <p>A practical automation script created with Python to streamline daily data processing tasks and workflows.</p>
-            </div>
+        <div class="card">
+          <div class="icon">3</div>
+          <h3>Error architecture</h3>
+          <p>Layered exceptions (validation, record, storage) are handled in one central place, so bad input never crashes the app.</p>
         </div>
+      </div>
     </div>
+  </section>
 
-    <!-- Contact Section -->
-    <div class="container" id="contact">
-        <h2 class="section-title">Contact Me</h2>
-        <div class="contact">
-            <p>Feel free to reach out for collaborations, projects, or any technical inquiries:</p>
-            <p style="margin-top: 15px; font-weight: bold;">Email: niloyparves69@gmail.cm.com</p>
-            <p style="margin-top: 5px; font-weight: bold;">Location: Bangladesh</p>
-        </div>
+  <section id="features">
+    <div class="wrap">
+      <h2>Features</h2>
+      <p class="sub">Everything needed to run a small school's records from the terminal.</p>
+      <ul class="features">
+        <li>Add, view, update, delete and search students</li>
+        <li>Graduate students with thesis and advisor</li>
+        <li>Teacher records with subjects and experience</li>
+        <li>Record grades per subject with letter grades</li>
+        <li>Mean, median and standard deviation</li>
+        <li>Top performers and subject averages</li>
+        <li>Grade distribution and probation alerts</li>
+        <li>Input validation with friendly messages</li>
+        <li>Error log file for troubleshooting</li>
+        <li>Built-in demo data and unit tests</li>
+      </ul>
     </div>
+  </section>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 Md. Niloy Parves. All Rights Reserved.</p>
-    </footer>
+  <section id="demo">
+    <div class="wrap">
+      <h2>How polymorphism shows up</h2>
+      <p class="sub">The same call, <code>standing()</code>, gives different results because each class defines its own rules.</p>
+      <div class="two">
+        <pre>class Student(Person):
+    PASSING_MARK = 50.0
+    HONORS_MARK  = 85.0
+
+class GraduateStudent(Student):
+    PASSING_MARK = 70.0
+    HONORS_MARK  = 90.0
+
+for s in students:
+    print(s.standing())</pre>
+        <table>
+          <thead><tr><th>Type</th><th>Average</th><th>Standing</th></tr></thead>
+          <tbody>
+            <tr><td>Student</td><td>67.7</td><td>Good standing</td></tr>
+            <tr><td>Graduate Student</td><td>67.7</td><td>Probation</td></tr>
+            <tr><td>Student</td><td>88.0</td><td>Honors</td></tr>
+            <tr><td>Graduate Student</td><td>88.0</td><td>Good standing</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="run">
+    <div class="wrap">
+      <h2>Run it</h2>
+      <p class="sub">No installation needed. Python 3.9 or newer is enough.</p>
+      <pre>python main.py          # start the app
+python tests/test_edumanage.py   # run the tests</pre>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">EduManage · Built with Python</div>
+</footer>
 
 </body>
 </html>
-
